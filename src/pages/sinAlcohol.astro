@@ -1,0 +1,42 @@
+---
+import Layout from "../layouts/Layout.astro";
+const API="https://www.thecocktaildb.com/api/json/v1/1/filter.php?a=Non_Alcoholic";
+const resp = await fetch(API); //Trae la informacion del API
+const datos =await resp.json(); // convierte la informacion en un objeto
+
+console.log(datos);
+---
+<Layout>
+    <div class="container">
+
+        <h3 class="text-center py-4">Cocteles Sin Alcohol</h3>
+        <div class="row">
+            {
+                datos && datos.drinks.map((item)=>(
+
+                <div class="col-md-4 col-lg-3 mb-4">
+                <div class="card h-100">
+                    <div class="card-header p-0"> <img src={item.strDrinkThumb} class="img-fluid"  alt=""></div>
+                    <div class="card-body"><p class="text-center">{item.strDrink}</p></div>
+                    <div class="card-footer">
+                        
+                        <a href="" class="btn btn-outline-success btn-sm d-grid"> Ver detalle</a>
+
+                    
+                        
+                        </div>
+
+                </div>
+
+            </div>
+
+                )
+            )
+            }
+         
+
+        </div>
+
+    </div>
+
+</Layout>

@@ -1,0 +1,146 @@
+---
+import Layout from "../layouts/Layout.astro";
+const API="https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=rum";
+const resp = await fetch(API); //Trae la informacion del API
+const datos =await resp.json(); // convierte la informacion en un objeto
+
+console.log(datos);
+---
+<Layout>
+    <div class="container">
+
+        <h3 class="text-center py-4">Cocteles a base de RON</h3>
+        <div class="row" id="mostrarCocteles">
+            {
+                datos && datos.drinks.map((item)=>(
+
+                <div class="col-md-4 col-lg-3 mb-4">
+                <div class="card h-100">
+                    <div class="card-header p-0"> <img src={item.strDrinkThumb} class="img-fluid"  alt=""></div>
+                    <div class="card-body"><p class="text-center">{item.strDrink}</p></div>
+                    <div class="card-footer">
+                        
+                    <a href="#" 
+                        class="btn btn-outline-success btn-sm d-grid" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#exampleModal"
+                        id={item.idDrink}> 
+                        Ver detalle
+                    </a>
+
+                        
+
+                    
+                        
+                        </div>
+
+                </div>
+
+            </div>
+
+                )
+            )
+            }
+         
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Button trigger modal -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel" style="color:black">Detalle del coctel</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="mostrarModal">
+        
+        <div class="row" style="color: black;" >
+            <div class="col-md-4">
+                <img src="" alt="">
+                </div>
+
+                <div class="col-md-8">
+                    <h3>Titulo</h3>
+                    <p>Preparacion</p>
+                    </div>
+            
+            </div>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+     
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</Layout>
+
+<script>
+    
+
+    const API ="https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i="
+    const mostrarCoctelesEl = document.querySelector("#mostrarCocteles")
+    const mostrarModalEl = document.querySelector("#mostrarModal")
+
+    mostrarCoctelesEl.addEventListener("click",(e)=>{
+
+        if(e.target && e.target.tagName ==="A"){
+            mostrarModal(e.target.id)
+        }
+
+    })
+
+    const mostrarModal = async(id)=>{
+    try{
+        const resp = await fetch(API+id)
+        if(resp.status===200){
+            const datos = await resp.json();
+           //console.log(datos)
+           renderModal(datos.drinks[0]);
+        }else{
+            console.log("error del api")
+        }
+
+    }catch(error){
+        console.log(error);
+    }
+}
+
+function renderModal(datos){
+    console.log(datos)
+    let valor =
+    `
+    <div class="row" style="color: black;" >
+            <div class="col-md-4">
+                <img src=${datos.strDrinkThumb} alt="" class="img-fluid">
+                </div>
+
+                <div class="col-md-8">
+                    <h3>${datos.strDrink}</h3>
+                    <p>${datos.strInstructions}</p>
+                    </div>
+            
+            </div>
+
+
+      </div>
+    
+    `
+    mostrarModalEl.innerHTML=valor
+}
+
+
+    </script>
+
